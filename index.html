@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Qué tipo de biohacker financiero sos?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone:#FAF6EE;
+    --ink:#2B2620;
+    --forest:#33503F;
+    --forest-dark:#233A2C;
+    --gold:#B8933D;
+    --line:#DFD6C2;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bone);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .wrap{
+    width:100%;
+    max-width:560px;
+  }
+  h1,h2,.serif{
+    font-family:'Archivo Black',sans-serif;
+    font-weight:400;
+    line-height:1.2;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+  }
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* Intro */
+  #intro h1{font-size:1.7rem; margin:0 0 14px;}
+  #intro p{font-size:1.02rem; line-height:1.55; color:#54493B; max-width:46ch;}
+  .tag{
+    display:inline-block;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    color:var(--forest);
+    background:#E7EEE7;
+    padding:5px 12px;
+    border-radius:100px;
+    margin-bottom:18px;
+  }
+  button{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:.95rem;
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    padding:14px 26px;
+    background:var(--forest);
+    color:#fff;
+    transition:background .15s ease, transform .1s ease;
+  }
+  button:hover{background:var(--forest-dark);}
+  button:active{transform:scale(.98);}
+  button.ghost{
+    background:transparent;
+    color:var(--forest);
+    border:1.5px solid var(--forest);
+  }
+  button.ghost:hover{background:#E7EEE7;}
+
+  /* Quiz */
+  .progress-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:10px;
+    font-size:.8rem;
+    color:#8A7D66;
+  }
+  .bar{
+    height:3px;
+    background:var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:32px;
+  }
+  .bar-fill{
+    height:100%;
+    background:var(--gold);
+    transition:width .3s ease;
+  }
+  .q-text{font-size:1.35rem; margin:0 0 22px;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{
+    text-align:left;
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:15px 18px;
+    font-family:'Inter',sans-serif;
+    font-size:.96rem;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt:hover{border-color:var(--forest); background:#F3F0E6;}
+  .opt.selected{border-color:var(--forest); background:#E7EEE7;}
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:26px;
+  }
+
+  /* Result */
+  #result .emoji{font-size:2.4rem; margin-bottom:6px;}
+  #result h2{font-size:1.6rem; margin:0 0 10px;}
+  #result .desc{font-size:1rem; line-height:1.6; color:#443A2C; margin-bottom:22px;}
+  .panel{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:24px;
+  }
+  .panel-title{
+    font-size:.75rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:#8A7D66;
+    margin-bottom:12px;
+  }
+  .axis-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:7px 0;
+    font-size:.9rem;
+    border-top:1px solid #F0EBDE;
+  }
+  .axis-row:first-of-type{border-top:none;}
+  .axis-label{color:#6B5F4C;}
+  .axis-value{font-weight:600; color:var(--ink);}
+
+  .consejo{
+    background:#F3F0E6;
+    border-left:3px solid var(--gold);
+    padding:14px 18px;
+    border-radius:6px;
+    font-size:.93rem;
+    line-height:1.55;
+    margin-bottom:26px;
+  }
+
+  .capture{margin-bottom:18px;}
+  .capture label{font-size:.85rem; color:#6B5F4C; display:block; margin-bottom:8px;}
+  .capture-row{display:flex; gap:8px;}
+  input[type=email]{
+    flex:1;
+    padding:13px 14px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    font-family:'Inter',sans-serif;
+    font-size:.95rem;
+  }
+  input[type=email]:focus{outline:2px solid var(--forest); outline-offset:1px;}
+  .fine{font-size:.78rem; color:#9C9078; margin-top:8px;}
+
+  #restart-link{
+    display:block;
+    text-align:center;
+    margin-top:22px;
+    font-size:.85rem;
+    color:#8A7D66;
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <div id="intro" class="screen active">
+    <span class="tag">Diagnóstico · 2 minutos</span>
+    <h1>¿Qué tipo de biohacker financiero sos?</h1>
+    <p>9 preguntas sobre tu situación económica actual y desde qué lugar tomás tus decisiones de dinero. Al final vas a tener un perfil claro — y una idea concreta de por dónde empezar.</p>
+    <div style="margin-top:26px;">
+      <button onclick="startQuiz()">Empezar el diagnóstico</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="screen">
+    <div class="progress-row">
+      <span id="q-count">Pregunta 1 de 9</span>
+    </div>
+    <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="nav-row">
+      <button class="ghost" id="back-btn" onclick="prevQ()">Atrás</button>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" class="screen">
+    <div class="emoji" id="r-emoji"></div>
+    <span class="tag" id="r-tag">Perfil</span>
+    <h2 id="r-title"></h2>
+    <p class="desc" id="r-desc"></p>
+
+    <div class="panel">
+      <div class="panel-title">Tu panel de diagnóstico</div>
+      <div class="axis-row">
+        <span class="axis-label">Situación económica recurrente</span>
+        <span class="axis-value" id="axis-eco"></span>
+      </div>
+      <div class="axis-row">
+        <span class="axis-label">Dónde ponés el foco al explicarla</span>
+        <span class="axis-value" id="axis-resp"></span>
+      </div>
+      <div class="axis-row">
+        <span class="axis-label">Cómo tomás tus decisiones de dinero hoy</span>
+        <span class="axis-value" id="axis-state"></span>
+      </div>
+    </div>
+
+    <div class="consejo" id="r-consejo"></div>
+
+    <div class="capture">
+      <label for="email-input">Dejá tu email y te mando tu resultado completo + el primer paso recomendado para tu perfil</label>
+      <div class="capture-row">
+        <input type="email" id="email-input" placeholder="tu@email.com" required>
+        <button onclick="submitEmail()">Enviar</button>
+      </div>
+      <p class="fine">
+        <!-- Cuando tengas tu cuenta de Mailerlite/Flodesk, reemplazá la función submitEmail() 
+             para hacer POST al action URL de tu formulario embebido. Por ahora este botón 
+             solo confirma visualmente — no pierde el dato, pero no lo envía a ningún lado 
+             hasta que conectes el formulario real. -->
+        No spam. Un solo email con tu resultado y el paso siguiente.
+      </p>
+    </div>
+
+    <button id="restart-link" onclick="restart()">Volver a hacer el diagnóstico</button>
+  </div>
+
+</div>
+
+<script>
+// ---------- Preguntas ----------
+// axis: 'eco' | 'resp' | 'state'
+// para 'eco' y 'resp' el value es puntaje (0,1,2)
+// para 'state' el value es 'nino' | 'padre' | 'adulto'
+const questions = [
+  { text: "En los últimos 6 meses, ¿Cuál describe mejor tu mes típico?", axis:'eco', options:[
+    {label:"💳 Termino el mes usando tarjeta/préstamo para llegar", value:0},
+    {label:"😌 Termino justo, sin sobrar ni faltar", value:1},
+    {label:"💰 Me sobra algo todos los meses", value:2}
+  ]},
+  { text: "Cuando aparece un gasto imprevisto, ¿De dónde sale el dinero?", axis:'eco', options:[
+    {label:"🆘 Me endeudo o pido prestado", value:0},
+    {label:"🔄 Lo cubro pero reorganizo todo lo demás", value:1},
+    {label:"🛟 Tengo un fondo para eso, no me desordena", value:2}
+  ]},
+  { text: "Tu deuda actual (si tenés) está...", axis:'eco', options:[
+    {label:"📈 Creciendo", value:0},
+    {label:"➡️ Estable, ni crece ni baja", value:1},
+    {label:"📉 Bajando, o no tengo deuda", value:2}
+  ]},
+  { text: "Cuando pensás en por qué tu situación financiera es como es hoy, ¿Qué explicación aparece primero?", axis:'resp', options:[
+    {label:"🌪️ El país, la economía, la mala suerte", value:0},
+    {label:"⚖️ Un poco de todo — circunstancias y decisiones mías", value:1},
+    {label:"🙋 Mis propias decisiones, aunque el contexto no ayude", value:2}
+  ]},
+  { text: "Si tuvieras que cambiar algo de tu situación financiera, ¿Sentís que depende de vos o de factores externos?", axis:'resp', options:[
+    {label:"🌍 Depende de que cambien las cosas afuera", value:0},
+    {label:"🤏 Algo puedo hacer, pero hay límites reales", value:1},
+    {label:"💪 Depende principalmente de mí", value:2}
+  ]},
+  { text: "Cuando algo financiero sale mal, ¿Qué es lo primero que pensás?", axis:'resp', options:[
+    {label:"😔 \u201cEsto me pasa por algo o por alguien\u201d", value:0},
+    {label:"🤔 \u201cA ver qué pasó\u201d", value:1},
+    {label:"🔍 \u201c¿Qué decisión mía llevó a esto y qué cambio?\u201d", value:2}
+  ]},
+  { text: "Cuando te llega dinero extra (bono, regalo, venta), tu primer impulso es...", axis:'state', options:[
+    {label:"🛍️ Gastarlo en algo que quiero ya", value:'nino'},
+    {label:"🔒 Guardarlo todo, casi con culpa si lo gasto", value:'padre'},
+    {label:"🧭 Evaluar si conviene gastarlo, ahorrarlo o invertirlo", value:'adulto'}
+  ]},
+  { text: "Cuando pensás en tus gastos del mes pasado, tu voz interna suena más a...", axis:'state', options:[
+    {label:"🌀 \u201cNo pensé, simplemente pasó\u201d", value:'nino'},
+    {label:"😣 \u201cDebería haber ahorrado más, esto está mal\u201d", value:'padre'},
+    {label:"✅ \u201cEsto lo decidí a propósito, esto no\u201d", value:'adulto'}
+  ]},
+  { text: "Frente a una decisión de dinero importante, ¿Qué te frena más seguido?", axis:'state', options:[
+    {label:"⏳ Me cuesta sostener el plan más de unos días", value:'nino'},
+    {label:"😨 El miedo a \u201chacer mal\u201d o a que me juzguen", value:'padre'},
+    {label:"🚀 Nada me frena especialmente, decido con lo que sé", value:'adulto'}
+  ]}
+];
+
+// ---------- Arquetipos ----------
+const archetypes = {
+  bombera: {
+    emoji:"🔥", title:"Bombero/a",
+    desc:"Vivís apagando incendios financieros. Las decisiones de plata se toman en modo urgencia, no en modo plan. No es falta de inteligencia — es que nadie te enseñó a operar en otro modo.",
+    consejo:"Primer paso recomendado: el curso arranca justo ahí, entendiendo de dónde viene el patrón de urgencia — a tu ritmo, sin apuro."
+  },
+  guardiana: {
+    emoji:"🛡️", title:"Guardián/a",
+    desc:"Controlás cada peso, pero con culpa — ahorrás, pero no disfrutás. El dinero está \u201ca salvo\u201d pero vos no estás en paz con él.",
+    consejo:"Primer paso recomendado: no te falta disciplina, te sobra. El curso te ayuda a soltar la exigencia de a poco, sin perder el control que ya construiste."
+  },
+  equilibrista: {
+    emoji:"⚖️", title:"Equilibrista",
+    desc:"Sabés lo que hay que hacer y a veces lo hacés — pero no lo sostenés. Estás más cerca de lo que creés, te falta estructura, no información.",
+    consejo:"Primer paso recomendado: no necesitás más teoría, necesitás sostener lo que ya sabés. El curso te da la estructura que hoy te falta."
+  },
+  desconectada: {
+    emoji:"🌫️", title:"Desconectado/a",
+    desc:"Ganás bien, pero no sentís que tenés el control — el dinero entra, pero la relación con él sigue en piloto automático o con culpa.",
+    consejo:"Primer paso recomendado: con tu nivel de ingresos, probablemente lo que más te sirva sea una mirada personalizada — una asesoría 1:1 puede ir directo al punto."
+  },
+  arquitecta: {
+    emoji:"🏛️", title:"Arquitecto/a",
+    desc:"Ya tenés las bases. Estás en el momento de optimizar y escalar, no de aprender desde cero.",
+    consejo:"Primer paso recomendado: tu siguiente nivel es armar una estrategia de cartera personalizada — te conviene la asesoría 1:1 antes que el curso completo."
+  }
+};
+
+// ---------- Estado ----------
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+
+function startQuiz(){
+  show('quiz');
+  renderQuestion();
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('q-count').textContent = `Pregunta ${current+1} de ${questions.length}`;
+  document.getElementById('bar-fill').style.width = `${((current)/questions.length)*100}%`;
+  document.getElementById('q-text').textContent = q.text;
+  const optsWrap = document.getElementById('options');
+  optsWrap.innerHTML = '';
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[current] && answers[current].idx === idx ? ' selected' : '');
+    btn.textContent = opt.label;
+    btn.onclick = () => selectOption(idx);
+    optsWrap.appendChild(btn);
+  });
+  document.getElementById('back-btn').style.visibility = current === 0 ? 'hidden' : 'visible';
+}
+
+function selectOption(idx){
+  const q = questions[current];
+  answers[current] = { axis: q.axis, value: q.options[idx].value, idx };
+  setTimeout(()=>{
+    if(current < questions.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      computeResult();
+    }
+  }, 180);
+}
+
+function prevQ(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function computeResult(){
+  let eco = 0, resp = 0;
+  const stateCounts = {nino:0, padre:0, adulto:0};
+  answers.forEach(a=>{
+    if(a.axis==='eco') eco += a.value;
+    if(a.axis==='resp') resp += a.value;
+    if(a.axis==='state') stateCounts[a.value]++;
+  });
+
+  let dominantState = 'adulto';
+  let max = -1;
+  Object.keys(stateCounts).forEach(k=>{
+    if(stateCounts[k] > max){ max = stateCounts[k]; dominantState = k; }
+  });
+
+  const ecoLevel = eco <= 2 ? 0 : (eco <= 4 ? 1 : 2);
+  const respHigh = resp >= 5;
+
+  let key;
+  if(ecoLevel === 0){
+    key = 'bombera';
+  } else if(ecoLevel === 1){
+    if(dominantState === 'adulto') key = 'equilibrista';
+    else if(dominantState === 'padre') key = 'guardiana';
+    else key = 'bombera';
+  } else {
+    if(dominantState === 'adulto' && respHigh) key = 'arquitecta';
+    else if(dominantState === 'adulto') key = 'equilibrista';
+    else key = 'desconectada';
+  }
+
+  const a = archetypes[key];
+  document.getElementById('r-emoji').textContent = a.emoji;
+  document.getElementById('r-title').textContent = a.title;
+  document.getElementById('r-desc').textContent = a.desc;
+  document.getElementById('r-consejo').textContent = a.consejo;
+
+  const ecoLabels = ['Por debajo del equilibrio', 'En el punto de equilibrio', 'Por encima del equilibrio'];
+  document.getElementById('axis-eco').textContent = ecoLabels[ecoLevel];
+  document.getElementById('axis-resp').textContent = respHigh ? 'Más hacia tus propias decisiones' : (resp >= 3 ? 'Un poco de ambos lados' : 'Más hacia el contexto de afuera');
+  const stateLabels = {nino:'Modo impulso — decidís rápido, en el momento', padre:'Modo control — decidís desde la exigencia', adulto:'Modo evaluación — decidís con calma y datos'};
+  document.getElementById('axis-state').textContent = stateLabels[dominantState];
+
+  show('result');
+}
+
+function submitEmail(){
+  const val = document.getElementById('email-input').value;
+  if(!val || !val.includes('@')){
+    alert('Ingresá un email válido');
+    return;
+  }
+  // TODO: reemplazar por el envío real al formulario de Mailerlite/Flodesk
+  alert('¡Gracias! (conectá este botón a tu Mailerlite para que el email se guarde de verdad)');
+}
+
+function restart(){
+  current = 0;
+  answers.fill(null);
+  show('intro');
+}
+</script>
+</body>
+</html>
