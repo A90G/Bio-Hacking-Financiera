@@ -447,14 +447,34 @@ function computeResult(){
   show('result');
 }
 
-function submitEmail(){
-  const val = document.getElementById('email-input').value;
-  if(!val || !val.includes('@')){
+async function submitEmail() {
+  const input = document.getElementById('email-input');
+  const val = input.value;
+
+  if (!val || !val.includes('@')) {
     alert('Ingresá un email válido');
     return;
   }
-  // TODO: reemplazar por el envío real al formulario de Mailerlite/Flodesk
-  alert('¡Gracias! (conectá este botón a tu Mailerlite para que el email se guarde de verdad)');
+
+  try {
+    const res = await fetch('https://api.convertkit.com/v3/forms/9926374/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        api_key: 'j54t6dINdPNtjZJcqXXPug',
+        email: val,
+        tags: [23493044] // tag: quiz-biohacking-financiero
+      })
+    });
+
+    if (!res.ok) throw new Error('Kit respondió con error');
+
+    input.disabled = true;
+    alert('¡Gracias! Revisá tu email en los próximos días 💌');
+  } catch (err) {
+    console.error(err);
+    alert('Hubo un problema al guardar tu email. Probá de nuevo en un momento.');
+  }
 }
 
 function restart(){
